@@ -1,0 +1,63 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        gradlePluginPortal()
+    }
+
+    dependencies {
+        classpath "org.elasticsearch.gradle:build-tools:${elasticsearch_version}"
+    }
+}
+
+plugins {
+    id 'java'
+}
+
+apply plugin: 'elasticsearch.esplugin'
+
+group = 'io.github.lee0701'
+version = '0.0.1'
+description = 'Hanja Reading conversion filter'
+sourceCompatibility = '11'
+
+esplugin {
+    name 'hanja-reading-filter'
+    description project.description
+    classname 'io.github.lee0701.elasticsearch.plugin.analysis.HanjaReadingFilterPlugin'
+}
+
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+        maven {
+        name 'sonatype'
+        url 'https://oss.sonatype.org/content/repositories/releases'
+    }
+}
+
+dependencies {
+    implementation "org.elasticsearch:elasticsearch:${elasticsearch_version}"
+    implementation 'org.json:json:20230227'
+}
+
+processResources {
+    filteringCharset 'UTF-8'
+    filter ReplaceTokens, tokens: [
+            project_version: project.version,
+            project_description: project.description,
+            elasticsearch_version: elasticsearch_version,
+    ]
+}
+
+task packageZip(type: Zip) {
+    def folders = [
+
+    ]
+}
+
+test {
+    useJUnitPlatform()
+}
